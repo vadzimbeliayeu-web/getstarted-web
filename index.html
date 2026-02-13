@@ -1,10 +1,50 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Test</title>
 </head>
 <body>
 <h1>test</h1>
+
+<button id="btn">Send POST</button>
+<pre id="out" style="white-space: pre-wrap;"></pre>
+
+<script>
+  const BACKEND_URL = "https://getstarted-web.onrender.com/api/test"; // <-- сюда подставишь
+
+  const out = document.getElementById("out");
+  const btn = document.getElementById("btn");
+
+  function log(x) {
+    out.textContent = typeof x === "string" ? x : JSON.stringify(x, null, 2);
+  }
+
+  btn.addEventListener("click", async () => {
+    btn.disabled = true;
+    log("Sending...");
+
+    try {
+      const res = await fetch(BACKEND_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ts: Date.now(),
+          msg: "hello from github pages",
+        }),
+      });
+
+      const text = await res.text();
+      log(`HTTP ${res.status}\n\n${text}`);
+    } catch (e) {
+      log(`Error: ${e?.message || e}`);
+    } finally {
+      btn.disabled = false;
+    }
+  });
+</script>
 </body>
 </html>
